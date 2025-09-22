@@ -84,7 +84,7 @@ Run the development server
 bash
 Copy code
 npm run start:dev
-The server runs at http://localhost:3001 by default.
+The server runs at http://localhost:3005 by default.
 
 🔑 Authentication Flow
 Sign Up: User registers with email/password.
