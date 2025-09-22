@@ -1,98 +1,117 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Carbon Emissions Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is the **backend** for the Carbon Emissions Dashboard assignment. It provides REST APIs for managing companies, emissions, and posts, as well as authentication for users. The backend is built using **NestJS** and implements JWT-based authentication with cookies for secure and stateless sessions.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📝 Project Overview
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The backend includes:
 
-## Project setup
+- **Authentication**
+  - Sign Up
+  - Sign In
+  - Refresh Token
+  - JWT + Cookies for session management
+  - Implemented with **Passport.js** (local & JWT strategies)
+- **Companies API**
+  - Returns list of companies and their emissions
+- **Dashboard API**
+  - Returns overview stats
+- **Posts API**
+  - Create and fetch posts linked to companies and months
+- **Simulated latency and failures**
+  - Delay and jitter helpers for testing frontend loading/error states
 
+> All data is stored in-memory (no database) as this assignment focuses on frontend integration. Seed data is included.
+
+---
+
+## ⚙️ Tech Stack & Libraries
+
+- **NestJS**: Structured and scalable backend framework for Node.js.
+- **TypeScript**: Ensures type safety and better code maintainability.
+- **Passport.js**: Authentication middleware for NestJS, easy integration with JWT.
+- **JWT (JSON Web Tokens)**: Secure and stateless authentication mechanism.
+- **Cookies**: Tokens are sent via HTTP-only cookies for security.
+- **dotenv**: Environment variables for configuration and easy testing.
+  
+**Why these were chosen:**
+
+- NestJS provides **modularity, decorators, and dependency injection**, making backend code clean and maintainable.
+- JWT + cookies allow **stateless authentication** without storing sessions server-side.
+- Passport.js integrates seamlessly with NestJS and supports multiple strategies.
+- dotenv allows **easy configuration and testing** without exposing sensitive credentials.
+
+---
+
+## 🗂 Project Structure
+
+src/
+├─ auth/ # Authentication controllers, services, and guards
+├─ dashboard/ # Dashboard controllers and services
+├─ companies/ # Companies API
+├─ posts/ # Posts API
+├─ main.ts # Application entry point
+├─ utils/ # Delay, jitter, and failure simulation helpers
+.env # Environment configuration (mock values)
+
+yaml
+Copy code
+
+---
+
+## 💾 How to Run Locally
+
+1. **Clone the repository**
 ```bash
-$ npm install
-```
+git clone https://github.com/isroil01/assignment_dashboard_backend.git
+cd assignment_dashboard_backend
+Install dependencies
 
-## Compile and run the project
+bash
+Copy code
+npm install
+Add .env file
 
-```bash
-# development
-$ npm run start
+bash
+Copy code
+cp .env.example .env
+The .env file contains mock values and nothing sensitive. It’s included to make local testing easier.
 
-# watch mode
-$ npm run start:dev
+Run the development server
 
-# production mode
-$ npm run start:prod
-```
+bash
+Copy code
+npm run start:dev
+The server runs at http://localhost:3001 by default.
 
-## Run tests
+🔑 Authentication Flow
+Sign Up: User registers with email/password.
 
-```bash
-# unit tests
-$ npm run test
+Sign In: Returns accessToken (short-lived) and refreshToken (long-lived) via HTTP-only cookies.
 
-# e2e tests
-$ npm run test:e2e
+Refresh Token: Allows the frontend to get a new access token without re-login.
 
-# test coverage
-$ npm run test:cov
-```
+Protected Routes: Only accessible if valid JWT is present in cookie.
 
-## Deployment
+🧩 Features & Assumptions
+Simulated latency (200–800ms) and failure (15%) to allow realistic frontend testing.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+JWT + cookies ensure secure and stateless authentication.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+All data is stored in-memory for simplicity; no database required.
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+.env exists for easy configuration during local testing.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+⚖️ Trade-offs & Notes
+No database included to keep focus on frontend integration and assignment requirements.
 
-## Resources
+Passport.js + JWT simplifies auth logic and can be extended to real DB easily.
 
-Check out a few resources that may come in handy when working with NestJS:
+Delay and failure helpers allow frontend to handle loading, error, and retry logic naturally.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+⏱ Time to Complete
+Focused Time: ~1–2 hours
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Tools Used: VSCode, Node.js, NestJS, Git, GitHub
